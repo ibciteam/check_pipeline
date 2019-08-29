@@ -31,7 +31,7 @@ pipeline {
       echo env.GITHUB_PR
       echo env.GITHUB_COMMIT
       wrap([$class: 'BuildUser']) {
-      echo "$BUILD_USER_EMAIL"
+        sh 'echo "${BUILD_USER_EMAIL}"'
     }
           
     }
