@@ -34,7 +34,7 @@ pipeline {
       println "Primary owner e-mail: ${ownership.job.primaryOwnerEmail}"
       println "Secondary owner IDs: ${ownership.job.secondaryOwnerIds}"
       println "Secondary owner e-mails: ${ownership.job.secondaryOwnerEmails}"
-      def SEC_OWNERS_LIST="${ownership.job.secondaryOwnerEmails}"
+      def SEC_OWNERS_LIST=${ownership.job.secondaryOwnerEmails}
       def SEC_OWNERS=SEC_OWNERS_LIST.join(", ")
       
       echo "${ownership.job.primaryOwnerEmail},$SEC_OWNERS"
