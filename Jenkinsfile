@@ -30,18 +30,22 @@ pipeline {
       echo env.GIT_REPO
       echo env.GITHUB_PR
       echo env.GITHUB_COMMIT
+      println "Primary owner ID: ${ownership.job.primaryOwnerId}"
+      println "Primary owner e-mail: ${ownership.job.primaryOwnerEmail}"
+      println "Secondary owner IDs: ${ownership.job.secondaryOwnerIds}"
+      println "Secondary owner e-mails: ${ownership.job.secondaryOwnerEmails}"
+
       wrap([$class: 'BuildUser']) {
-        echo "${BUILD_USER_EMAIL}"
-    }
+      echo "${BUILD_USER}"
+      echo "${BUILD_USER_ID}"
+      echo "${BUILD_USER_EMAIL}" 
+       }
+       
+    
           
     }
   }
     
-    stage("Build CVE job"){
-      steps{
-    
-      build job: 'run_docker_image_cve_scan', parameters: [[$class: 'StringParameterValue', name: 'upstream_git_commit', value:env.GITHUB_COMMIT], [$class: 'StringParameterValue', name: 'upstream_github_repo', value:env.GIT_REPO],[$class: 'StringParameterValue', name: 'upstream_build_PR', value:env.GITHUB_PR], [$class: 'StringParameterValue', name: 'upstream_build_id', value:$BUILD_ID], [$class: 'StringParameterValue', name: 'upstream_job_name', value:$JOB_NAME], [$class: 'StringParameterValue', name: 'upstream_job_owners', value:'ssarojini@infoblox.com'], [$class: 'StringParameterValue', name: 'upstream_build_user', value:$BUILD_USER_EMAIL], [$class: 'StringParameterValue', name: 'upstream_execution_url', value:$BUILD_URL], [$class: 'StringParameterValue', name: 'tag', value:'20190828-45-357a348'], [$class: 'StringParameterValue', name: 'repo', value:'infobloxcto/siemserver']]
-      }
-  }
+   
 } 
-} 
+}
