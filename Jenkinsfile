@@ -25,12 +25,10 @@ pipeline {
     }
     stage("printing other variables"){
     steps{
-       env.BUILD_ID=BUILD_ID
-       env.BUILD_URL=BUILD_URL
+       env.BUILD_ID ="$BUILD_ID"
+       env.BUILD_URL ="$BUILD_URL"
        wrap([$class: 'BuildUser']) {
-       env.BUILD_USER=={BUILD_USER}
-       env.BUILD_USER_ID= {BUILD_USER_ID}
-       env.BUILD_USER_EMAIL={BUILD_USER_EMAIL}
+       env.BUILD_USER_EMAIL ="${BUILD_USER_EMAIL}"
        echo env.BUILD_ID
        echo env.BUILD_URL
        
