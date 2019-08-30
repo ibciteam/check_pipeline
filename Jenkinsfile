@@ -24,19 +24,14 @@ pipeline {
     stage("printing other variables"){
     steps{
       
-      echo "$BUILD_ID"
-      echo "$BUILD_URL"
-      echo "$JOB_NAME"
-      echo env.GIT_REPO
-      echo env.GITHUB_PR
-      echo env.GITHUB_COMMIT
-      println "Primary owner ID: ${ownership.job.primaryOwnerId}"
-      println "Primary owner e-mail: ${ownership.job.primaryOwnerEmail}"
-      println "Secondary owner IDs: ${ownership.job.secondaryOwnerIds}"
-      println "Secondary owner e-mails: ${ownership.job.secondaryOwnerEmails}"
-      echo "${ownership.job.primaryOwnerEmail}"
-      wrap([$class: 'BuildUser']) {
-      echo "${BUILD_USER_EMAIL}" 
+       env.BUILD_ID="$BUILD_ID"
+       env.BUILD_URL="$BUILD_URL"
+       wrap([$class: 'BuildUser']) {
+       env.BUILD_USER_EMAIL="${BUILD_USER_EMAIL}"
+       env.JOB_NAME="$JOB_NAME"
+       env.PRIMARY_JOB_OWNER_EMAIL="${ownership.job.primaryOwnerEmail}" 
+       env.SECONDARY_JOB_OWNER_EMAIL="${ownership.job.secondaryOwnerIds}"
+       
        }
        
     
@@ -46,7 +41,7 @@ pipeline {
   stage("Build CVE job"){
       steps{
     
-      build job: 'run_docker_image_cve_scan', parameters: [[$class: 'StringParameterValue', name: 'upstream_git_commit', value:env.GITHUB_COMMIT], [$class: 'StringParameterValue', name: 'upstream_github_repo', value:env.GIT_REPO],[$class: 'StringParameterValue', name: 'upstream_build_PR', value:env.GITHUB_PR], [$class: 'StringParameterValue', name: 'upstream_build_id', value:$BUILD_ID], [$class: 'StringParameterValue', name: 'upstream_job_name', value:$JOB_NAME], [$class: 'StringParameterValue', name: 'upstream_job_owners', value:"${ownership.job.primaryOwnerEmail}"], [$class: 'StringParameterValue', name: 'upstream_build_user', value:$BUILD_USER_EMAIL], [$class: 'StringParameterValue', name: 'upstream_execution_url', value:$BUILD_URL], [$class: 'StringParameterValue', name: 'tag', value:'20190828-45-357a348'], [$class: 'StringParameterValue', name: 'repo', value:'infobloxcto/siemserver']]
+      build job: 'run_docker_image_cve_scan', parameters: [[$class: 'StringParameterValue', name: 'upstream_git_commit', value:env.GITHUB_COMMIT], [$class: 'StringParameterValue', name: 'upstream_github_repo', value:env.GIT_REPO],[$class: 'StringParameterValue', name: 'upstream_build_PR', value:env.GITHUB_PR], [$class: 'StringParameterValue', name: 'upstream_build_id', value:env.BUILD_ID], [$class: 'StringParameterValue', name: 'upstream_job_name', value:env.JOB_NAME], [$class: 'StringParameterValue', name: 'upstream_job_owners', value:env.SECONDARY_JOB_OWNER_EMAIL], [$class: 'StringParameterValue', name: 'upstream_build_user', value:env.BUILD_USER_EMAIL], [$class: 'StringParameterValue', name: 'upstream_execution_url', value:env.BUILD_URL], [$class: 'StringParameterValue', name: 'tag', value:'20190828-45-357a348'], [$class: 'StringParameterValue', name: 'repo', value:'infobloxcto/siemserver']]
       }
   } 
    
