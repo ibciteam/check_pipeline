@@ -34,7 +34,7 @@ pipeline {
       println "Primary owner e-mail: ${ownership.job.primaryOwnerEmail}"
       println "Secondary owner IDs: ${ownership.job.secondaryOwnerIds}"
       println "Secondary owner e-mails: ${ownership.job.secondaryOwnerEmails}"
-      SEC_OWNERS="${ownership.job.secondaryOwnerEmails}.join(", ")"
+      SEC_OWNERS="$ownership.job.secondaryOwnerEmails.join(", ")"
       echo "${ownership.job.primaryOwnerEmail},$SEC_OWNERS"
       wrap([$class: 'BuildUser']) {
       echo "${BUILD_USER_EMAIL}" 
