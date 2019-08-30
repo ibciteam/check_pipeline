@@ -31,7 +31,7 @@ pipeline {
        echo env.BUILD_USER_EMAIL
        }
        echo env.JOB_NAME
-       echo env.${ownership.job.primaryOwnerEmail} 
+       echo env.{ownership.job.primaryOwnerEmail} 
        
       
     }
