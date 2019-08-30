@@ -23,7 +23,6 @@ pipeline {
     }
     stage("printing other variables"){
     steps{
-      
        env.BUILD_ID="$BUILD_ID"
        env.BUILD_URL="$BUILD_URL"
        wrap([$class: 'BuildUser']) {
