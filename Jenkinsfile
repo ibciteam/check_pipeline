@@ -15,7 +15,7 @@ pipeline {
       steps {
        script{
         def url="$GIT_URL"
-        final git_repo = url.substring(url.lastIndexOf('/') + 1, url.length())
+        final git_repo = url.substring(url.lastIndexOf('/') + 1, url.length()-4)
         env.GIT_REPO =git_repo
        
         }
