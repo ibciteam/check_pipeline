@@ -17,11 +17,7 @@ pipeline {
     
     stage("Build CVE job"){
       steps{
-       echo env.BUILD_ID
-       echo env.BUILD_URL
        wrap([$class: 'BuildUser']) {
-       echo env.BUILD_USER_EMAIL
-       echo env.JOB_NAME
        build job: 'run_docker_image_cve_scan', parameters: [[$class: 'StringParameterValue', name: 'upstream_git_commit', value:env.GIT_COMMIT], [$class: 'StringParameterValue', name: 'upstream_github_repo', value:env.GIT_REPO],[$class: 'StringParameterValue', name: 'upstream_build_PR', value:env.CHANGE_ID], [$class: 'StringParameterValue', name: 'upstream_build_id', value:env.BUILD_ID], [$class: 'StringParameterValue', name: 'upstream_job_name', value:env.JOB_NAME], [$class: 'StringParameterValue', name: 'upstream_build_user', value:env.BUILD_USER_EMAIL], [$class: 'StringParameterValue', name: 'upstream_execution_url', value:env.BUILD_URL], [$class: 'StringParameterValue', name: 'tag', value:'20190828-45-357a348'], [$class: 'StringParameterValue', name: 'repo', value:'infobloxcto/siemserver']]
        }
       }
