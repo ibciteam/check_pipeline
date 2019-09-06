@@ -25,7 +25,7 @@ pipeline {
        
         def email_list = "${ownership.job.secondaryOwnerEmails}".substring(1,"${ownership.job.secondaryOwnerEmails}".size()-1)+", "+"${ownership.job.primaryOwnerEmail}"
         wrap([$class: 'BuildUser']){
-          if(env.BUILD_USER_EMAIL!="null")
+          if(env.BUILD_USER_EMAIL!= null)
           {
             email_list+=", "+env.BUILD_USER_EMAIL
           }
