@@ -1,9 +1,47 @@
 pipeline {
   agent {
-    label 'master'
+    label 'ubuntu_docker_label'
   }
-  
+  environment {
+    GOPATH = "$WORKSPACE"
+    DIRECTORY = "src/github.com/Infoblox-CTO/atlas.onprem.config.generator"
+    DOCKER_IMAGE = "infobloxcto/atlas.onprem.config.generator"
+    CSP_HOST = "www-test.csp.infoblox.com"
+  }
   stages {
+    stage("Test") {
+      steps {
+    withCredentials([[
+        $class: 'AmazonWebServicesCredentialsBinding',
+                credentialsId: 'ib-aws-creds',
+                accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+      ],
+      usernamePassword(
+          credentialsId: 'csp-admin',
+          usernameVariable: 'CSP_USER',
+          passwordVariable: 'CSP_PASS'),
+      ]) {
+            sh "cd $DIRECTORY && AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} make test"
+    }
+      }
+    }
+    stage("Build") {
+      steps {
+    withCredentials([[
+        $class: 'AmazonWebServicesCredentialsBinding',
+                credentialsId: 'ib-aws-creds',
+                accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+      ]]) {  
+            sh "cd $DIRECTORY && AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} make docker-build"
+        }
+        withDockerRegistry([credentialsId: "dockerhub-bloxcicd", url: ""]) {
+             sh 'cd $DIRECTORY && make docker-publish'
+          }
+      }
+    }
+    
     stage("First") {
       steps {
        script{
